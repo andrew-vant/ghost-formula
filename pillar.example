@@ -1,0 +1,8 @@
+ghost:
+  blog: blog.domain.com # Use this for a single instance with default settings.
+  instances:
+    blog.domain.com:
+ 		  external_port: 80
+      ghost_port: 2368
+  themes: salt://ghost/files/themes
+
