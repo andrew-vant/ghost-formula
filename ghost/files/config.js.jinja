@@ -1,0 +1,12 @@
+// # Ghost Configuration
+// Managed by Salt, do not edit by hand.
+
+var path = require('path'),
+    config;
+
+config = {
+  production: {{ prod|json }},
+  development: {{ dev|json }}
+};
+
+module.exports = config;
