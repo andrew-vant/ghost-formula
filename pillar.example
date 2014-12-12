@@ -1,8 +1,17 @@
 ghost:
-  blog: blog.domain.com # Use this for a single instance with default settings.
-  instances:
-    blog.domain.com:
- 		  external_port: 80
-      ghost_port: 2368
+  zip: salt://ghost/files/ghost.zip # Defaults to downloading from online.
   themes: salt://ghost/files/themes
-
+  frontend: apache
+  blogs:
+    - blog.domain.com
+  default_confs:
+    privacy:
+      useUpdateCheck: true
+      useGoogleFonts: false
+      useGravatar: true
+      useRpcPing: true
+      useStructuredData: false
+  local_confs:
+    privateblog.domain.com:
+      privacy:
+        useTinfoil: true
