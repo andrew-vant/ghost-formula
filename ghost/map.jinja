@@ -1,12 +1,3 @@
-{%- set ghost = salt['grains.filter_by']({
-    'defaults': {
-        'zip': 'salt://ghost/files/ghost.zip',
-        'themes': 'salt://ghost/files/themes',
-        'frontend': 'nginx'}
-    },
-    merge=salt['pillar.get']['ghost'],
-    default='defaults') %}
-
 {%- set pkgnames = salt['grains.filter_by']({
     'Debian: {'npm': 'npm',
               'node': 'nodejs-legacy',

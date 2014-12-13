@@ -1,18 +1,24 @@
 {% from "ghost/map.jinja" import apache with context %}
-{% from "ghost/map.jinja" import ghost with context %}
 
-ghost-frontend:
+ghost-frontend-apache:
   pkg.installed:
     - name: {{ apache.pkg }}
+  apache_module.enable:
+    - name: proxy_http
   service.running:
     - name: {{ apache.srv }}
 
-{%- for site in ghost.blogs %}
-ghost-frontend-{{ site }}:
+{%- for blog in salt['pillar.get']("ghost:blogs", [] %}
+ghost-frontend-{{ blog }}:
   file.managed:
-    - name: {{ apache.conf }}/sites-available/{{ site }}.conf
+    - name: {{ apache.conf }}/sites-available/{{ blog }}.conf
     - source: salt://ghost/files/apache-site.jinja
     - mode: 644
+    - defaults:
+        port: 80
+    - context:
+        blog: {{ blog }}
+        ghostport: {{ loop.index + 2368 }}
     - watch_in:
       - service: ghost-frontend
 

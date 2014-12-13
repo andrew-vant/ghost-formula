@@ -1,17 +1,20 @@
 ghost:
   zip: salt://ghost/files/ghost.zip # Defaults to downloading from online.
+  zip_hash: ofejoajfoaeijfo         # Only needed if downloading from http
   themes: salt://ghost/files/themes
-  frontend: apache
+  frontend: nginx
+  starting_port: 2368
   blogs:
     - blog.domain.com
-  default_confs:
-    privacy:
-      useUpdateCheck: true
-      useGoogleFonts: false
-      useGravatar: true
-      useRpcPing: true
-      useStructuredData: false
-  local_confs:
+  conf:
+    default:
+      privacy:
+        useUpdateCheck: true
+        useGoogleFonts: false
+        useGravatar: true
+        useRpcPing: true
+        useStructuredData: false
     privateblog.domain.com:
       privacy:
         useTinfoil: true
+

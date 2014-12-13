@@ -1,12 +1,22 @@
 // # Ghost Configuration
-// Managed by Salt, do not edit by hand.
+// # Managed by Salt, do not edit by hand.
+
+{#- Use the blog-specific configuration if it is available, otherwise use the
+    pillar-specified defaults if they are available, otherwise use Ghost's
+    defaults. #}
+
+{%- set conf = salt['pillar.get']("ghost:conf:" + blog,
+               salt['pillar.get']("ghost:conf:default",
+               {} ))
+%}
 
 var path = require('path'),
     config;
 
 config = {
-  production: {{ prod|json }},
-  development: {{ dev|json }}
+  production: {{ conf|json }},
+  development: {{ conf|json }}
 };
 
 module.exports = config;
+
