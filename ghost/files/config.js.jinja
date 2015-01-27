@@ -1,7 +1,7 @@
 // # Ghost Configuration
 // # Managed by Salt, do not edit by hand.
 
-{#- This template expects "blog" and "port" to be passed as context. #}
+{#- This template expects "blog", "listen_address" and "port" to be passed as context. #}
 
 {%- set pget = salt['pillar.get'] %}
 {%- set defaultconf = pget('ghost:conf:default', {}) %}
@@ -65,7 +65,7 @@ config = {
       debug: false
     },
     server: {
-      host: '127.0.0.1',
+      host: '{{ listen_address }}',
       port: '{{ port }}'
     },
     paths: {

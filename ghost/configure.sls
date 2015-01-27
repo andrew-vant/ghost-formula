@@ -21,5 +21,6 @@ ghost-{{ blog }}:
     - mode: 644
     - context:
         blog: {{ blog }}
+        listen_address: {{ dget("listen_address") }}
         port: {{ loop.index + dget("starting_port") }} {#- Note that loop.index starts at 1. #}
 {% endfor %}
