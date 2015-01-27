@@ -21,5 +21,5 @@ ghost-{{ blog }}:
     - mode: 644
     - context:
         blog: {{ blog }}
-        port: {{ loop.index + 2369 }} {#- Note that loop.index starts at 1. #}
+        port: {{ loop.index + dget("starting_port") }} {#- Note that loop.index starts at 1. #}
 {% endfor %}

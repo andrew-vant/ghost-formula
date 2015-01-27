@@ -2,7 +2,7 @@ root: /srv/ghost
 zip: salt://ghost/files/ghost.zip # Defaults to downloading from online.
 zip_hash: ""                      # Only needed if downloading from http
 themes: salt://ghost/files/themes
-starting_port: 2368
+starting_port: 2369
 # "blogs" should be a possibly-empty list of blog domains. (actually urls
 # without the leading http://)
 blogs: []
