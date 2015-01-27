@@ -1,5 +1,7 @@
 {%- from "ghost/map.jinja" import pkgnames with context -%}
-{%- set get = salt['defaults.get'] -%}
+
+{#- Stuffing defaults.get into something that's easier to write. #}
+{%- set dget = salt['defaults.get'] -%}
 
 ghost-deps:
   pkg.installed:
@@ -13,17 +15,17 @@ ghost-deps:
     - require:
       - pkg: ghost-deps
 
-{%- for site in get("blogs") %}
+{%- for site in dget("blogs") %}
 ghost-install-{{ site }}:
   archive.extracted:
-    - name: {{ get("root") }}/sites/{{ site }}
-    - source: {{ get("zip") }}
-    - source_hash: {{ get("zip_hash") }}
+    - name: {{ dget("root") }}/sites/{{ site }}
+    - source: {{ dget("zip") }}
+    - source_hash: {{ dget("zip_hash") }}
     - archive_format: zip
     - keep: true
   cmd.wait:
     - name: npm install --production
-    - cwd: {{ get("root") }}/sites/{{ site }}
+    - cwd: {{ dget("root") }}/sites/{{ site }}
     - watch:
       - archive: ghost-install-{{ site }}
 {%- endfor %}
