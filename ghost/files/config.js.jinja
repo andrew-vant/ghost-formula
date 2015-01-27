@@ -14,9 +14,32 @@ var path = require('path'),
     merges the pillar dict at ghost:conf:default into it, and then merges
     the one at ghost:conf:<blogname>. Essentially anything here can be
     overridden in pillar if you want. #}
+    
+function MergeRecursive(obj1, obj2) {
+
+  for (var p in obj2) {
+    try {
+      // Property in destination object set; update its value.
+      if ( obj2[p].constructor==Object ) {
+        obj1[p] = MergeRecursive(obj1[p], obj2[p]);
+
+      } else {
+        obj1[p] = obj2[p];
+
+      }
+
+    } catch(e) {
+      // Property in destination object not set; create it and set its value.
+      obj1[p] = obj2[p];
+
+    }
+  }
+
+  return obj1;
+}
 
 config = {
-  production: $.extend(true, {}, {
+  production: MergeRecursive(MergeRecursive({
     url: "http://{{ blog }}",
     mail: {},
     database: {
@@ -30,9 +53,9 @@ config = {
       host: '127.0.0.1',
       port: '{{ port }}'
     }
-  }, {{ defaultconf|json }}, {{ blogconf|json }}),
+  }, {{ defaultconf|json }}), {{ blogconf|json }}),
     
-  development: $.extend(true, {}, {
+  development: MergeRecursive(MergeRecursive({
     url: "http://localhost:{{ port }}",
     database: {
       client: 'sqlite3',
@@ -48,7 +71,7 @@ config = {
     paths: {
       contentPath: path.join(__dirname, '/content/')
     }
-  }, {{ defaultconf|json }}, {{ blogconf|json }})
+  }, {{ defaultconf|json }}), {{ blogconf|json }})
 };
 
 module.exports = config;
