@@ -2,7 +2,6 @@ ghost:
   zip: salt://ghost/files/ghost.zip # Defaults to downloading from online.
   zip_hash: ofejoajfoaeijfo         # Only needed if downloading from http
   themes: salt://ghost/files/themes
-  frontend: nginx
   starting_port: 2368
   blogs:
     - blog.domain.com

@@ -1,6 +1,0 @@
-<VirtualHost {{ blog }}:{{ port }}>
-    ServerName {{ blog }}
-    ProxyPreserveHost on
-    ProxyPass / http://localhost:{{ ghostport }}/
-</VirtualHost>
-

@@ -5,23 +5,4 @@
     },
     merge=salt['pillar.get']['ghost:lookup:pkgnames'],
     default='Debian') %}
-              
-{%- set apache = salt['grains.filter_by']({
-    'Debian': {'pkg': 'apache2',
-               'srv': 'apache2',
-               'conf': '/etc/apache2'},
-    'RedHat': {'pkg': 'httpd',
-               'srv': 'httpd',
-               'conf': '/etc/apache2'}
-    },
-    merge=salt['pillar.get']['ghost:lookup:apache'],
-    default='Debian') %}
-
-{%- set nginx = salt['grains.filter_by']({
-    'Debian': {'pkg': 'nginx',
-               'srv': 'nginx',
-               'conf': '/etc/nginx'},
-    },
-    merge=salt['pillar.get']['ghost:lookup:nginx'],
-    default='Debian') %}
 
