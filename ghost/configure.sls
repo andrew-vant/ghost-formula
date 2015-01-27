@@ -17,6 +17,7 @@ ghost-{{ blog }}:
   file.managed:
     - name: {{ dget("root") }}/sites/{{ blog }}/config.js
     - source: salt://ghost/files/config.js.jinja
+    - template: jinja
     - mode: 644
     - context:
         blog: {{ blog }}
