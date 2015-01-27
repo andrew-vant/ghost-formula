@@ -1,22 +1,54 @@
 // # Ghost Configuration
 // # Managed by Salt, do not edit by hand.
 
-{#- Use the blog-specific configuration if it is available, otherwise use the
-    pillar-specified defaults if they are available, otherwise use Ghost's
-    defaults. #}
+{#- This template expects "blog" and "port" to be passed as context. #}
 
-{%- set conf = salt['pillar.get']("ghost:conf:" + blog,
-               salt['pillar.get']("ghost:conf:default",
-               {} ))
-%}
+{%- set pget = salt['pillar.get'] %}
+{%- set defaultconf = pget('ghost:conf:default', {}) %}
+{%- set blogconf = pget('ghost:conf:' + blog, {}) %}
 
 var path = require('path'),
     config;
 
+{#- This ugly mess takes a default specifying only the minimal options,
+    merges the pillar dict at ghost:conf:default into it, and then merges
+    the one at ghost:conf:<blogname>. Essentially anything here can be
+    overridden in pillar if you want. #}
+
 config = {
-  production: {{ conf|json }},
-  development: {{ conf|json }}
+  production: $.extend(true, {}, {
+    url: "http://{{ blog }}",
+    mail: {}
+    database: {
+      client: 'sqlite3',
+      connection: {
+        filename: path.join(__dirname, '/content/data/ghost.db')
+      },
+      debug: false
+    },
+    server: {
+      host: '127.0.0.1',
+      port: '{{ port }}'
+    }
+  }, {{ defaultconf|json }}, {{ blogconf|json }}),
+    
+  development: $.extend(true, {}, {
+    url: "http://localhost:{{ port }}",
+    database: {
+      client: 'sqlite3',
+      connection: {
+        filename: path.join(__dirname, '/content/data/ghost.db')
+      },
+      debug: false
+    },
+    server: {
+      host: '127.0.0.1',
+      port: '{{ port }}'
+    },
+    paths: {
+      contentPath: path.join(__dirname, '/content/')
+    }
+  }, {{ defaultconf|json }}, {{ blogconf|json }})
 };
 
 module.exports = config;
-
