@@ -12,6 +12,7 @@ ghost-deps:
   npm.installed:
     - pkgs:
       - forever
+      - forever-service
     - require:
       - pkg: ghost-deps
 

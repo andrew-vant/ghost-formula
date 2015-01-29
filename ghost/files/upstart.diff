@@ -1,0 +1,20 @@
+diff --git a/templates/upstart/upstart.template b/templates/upstart/upstart.template
+index 7d9862e..6e66345 100644
+--- a/templates/upstart/upstart.template
++++ b/templates/upstart/upstart.template
+@@ -41,7 +41,13 @@ env KILLWAITTIME={{forceKillWaitTime|default('5000')}}
+ 
+ chdir {{cwd}}
+ 
+-exec {{envVars|default('')}} {{foreverPath}}forever -a -l $LOGFILE --minUptime $MIN_UPTIME --spinSleepTime $SPIN_SLEEP_TIME --killSignal $KILL_SIGNAL {{foreverOptions|default('')}} --uid {{service}} start {{script|default('app.js')}}  {{scriptOptions|default('')}}
++{%- if envVars|default(false) %}
++{%- for v in envVars.split(" ") %}
++env {{ v }}
++{%- endfor %}
++{%- endif %}
++
++exec {{foreverPath}}forever -a -l $LOGFILE --minUptime $MIN_UPTIME --spinSleepTime $SPIN_SLEEP_TIME --killSignal $KILL_SIGNAL {{foreverOptions|default('')}} --uid {{service}} start {{script|default('app.js')}}  {{scriptOptions|default('')}}
+ 
+ post-start script
+ 	echo "{{service}} started"
+
