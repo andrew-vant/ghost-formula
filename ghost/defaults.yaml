@@ -1,6 +1,6 @@
 root: /srv/ghost
-zip: salt://ghost/files/ghost.zip # Defaults to downloading from online.
-zip_hash: ""                      # Only needed if downloading from http
+zip: https://ghost.org/zip/ghost-0.5.8.zip
+zip_hash: c9c73d293cc6d9ce25948391c35d8ea7100639e1
 themes: salt://ghost/files/themes
 listen_address: 127.0.0.1
 starting_port: 2369
