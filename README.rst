@@ -36,7 +36,7 @@ Installs Ghost without configuring it. The installation zip file is downloaded
 from the `Ghost web site <https://ghost.org/download/>`_ by default, but the
 source can be redirected by a pillar entry.
 
-This installs one Ghost instance for each entry in pillar:ghost:blogs.
+This installs one Ghost instance for each entry in pillar\:ghost\:blogs.
 
 ``ghost.service``
 -----------------
