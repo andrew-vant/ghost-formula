@@ -6,3 +6,10 @@
     merge=salt['pillar.get']('ghost:lookup:pkgnames'),
     default='Debian') %}
 
+{%- set servicepath = salt['grains.filter_by']({
+    'default': '/etc/init.d/ghost-{}',
+    'Ubuntu': '/etc/init/ghost-{}.conf'},
+    grain='os',
+    merge=salt['pillar.get']('ghost:lookup:servicepath'),
+    default='default') %}
+
