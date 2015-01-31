@@ -1,19 +1,116 @@
+# If all you want is one copy of ghost running bare on port 80,
+# then this is fairly simple. Note that by default ghost listens
+# only on 127.0.0.1, so we need to override that if we're not using
+# a proxy.
+
 ghost:
-  zip: salt://ghost/files/ghost.zip # Defaults to downloading from online.
-  zip_hash: ofejoajfoaeijfo         # Only needed if downloading from http
-  themes: salt://ghost/files/themes
-  starting_port: 2368
+  starting_port: 80
   blogs:
-    - blog.domain.com
+    - myblog.example.com
   conf:
     default:
-      privacy:
-        useUpdateCheck: true
-        useGoogleFonts: false
-        useGravatar: true
-        useRpcPing: true
-        useStructuredData: false
-    privateblog.domain.com:
-      privacy:
-        useTinfoil: true
+      server:
+        host: {{ grains['ip4_interfaces']['eth0'][0] }}
 
+# There is a default package location in defaults.yaml, but if you want to
+# override it, you can. You only need zip_hash if your source is http. 
+# Address of the salt://ghost/files/ghost.zip form or similar are allowed and
+# don't require it.
+
+ghost:
+  zip: https://ghost.org/zip/ghost-0.5.8.zip
+  zip_hash: c9c73d293cc6d9ce25948391c35d8ea7100639e1
+
+# Multiple blogs are no harder. Each instance runs on a different port. If there
+# are special configuration settings you want for a blog, you can do that too.
+# Settings in ghost:conf:default are applied to the config.js file for all
+# blogs, but are overridden by any blog-specific settings.
+
+ghost:
+  starting_port: 2370   # Optional, this is the default.
+  blogs:
+    - blog1.example.com # Listens on 2370
+    - blog2.example.com # Listens on 2371
+    - blog3.example.com # Listens on 2372
+    - blot4.example.com # And so on...
+  conf:
+    default:
+      compress: 'false' # I have no idea why you might want to do this...
+    blog4.example.com:
+      privacy:
+        useTinfoil: 'true' # Maybe this guy is paranoid...
+
+# Of course, Ghost alone on high ports isn't that helpful, because people
+# aren't going to point a browser at them. If you're running multiple instances,
+# you almost certainly want a proxy in front of them listening on the standard
+# port 80. The Ghost team recommends nginx. A concise way to configure this
+# formula and the nginx formula jointly might look like this: 
+
+{%- load_yaml as blogs %}
+- blog1.example.com
+- blog2.example.com
+- blog3.example.com
+- blog4.example.com
+{%- endload %}
+{%- set starting_port = 2370 %}
+
+ghost:
+  blogs: {{ blogs }}
+  starting_port: {{ starting_port }}
+
+nginx:
+  ng:
+    vhosts:
+      managed:
+{%- for blog in blogs %}
+        {{ blog }}:
+          enabled: True
+          config:
+            - server:
+              - server_name: {{ blog }}
+              - listen: 80
+              - location /:
+                - proxy_pass: http://127.0.0.1:{{ starting_port + loop.index0 }}/
+                - proxy_set_header: Host $host
+{%- endfor %}
+
+# That will get nginx directing incoming requests to the correct ghost instance.
+# One other thing you probably want is to get the admin interface protected
+# by SSL; otherwise, passwords will be sent in plaintext. The next example
+# shows a series of blogs as subdomains on the same domain, with SSL enabled
+# on the admin interface. 
+#
+# Note that neither ghost-formula nor nginx-formula (as far as I can tell) 
+# will manage SSL certificates. Aquiring and placing the .crt and .key
+# files referenced below is your own problem. You may find the Salt TLS
+# module helpful for the purpose.
+
+---
+
+ghost:
+  blogs: {{ blogs }}
+  starting_port: {{ starting_port }}
+  conf:
+    default:
+      forceAdminSSL: "true"
+
+nginx:
+  ng:
+    vhosts:
+      managed:
+{%- for blog in blogs %}
+        {{ blog }}:
+          enabled: True
+          config:
+            - server:
+              - server_name: {{ blog }}
+              - listen: 80
+              - listen: 443 ssl
+              - ssl_certificate: '/etc/pki/tls/certs/*.example.com.crt'
+              - ssl_certificate_key: '/etc/pki/tls/certs/*.example.com.key'
+              - location /:
+                - proxy_pass: http://127.0.0.1:{{ starting_port + loop.index0 }}/
+                - proxy_set_header: Host $host
+                - proxy_set_header: X-Forwarded-For $proxy_add_x_forwarded_for
+                - proxy_set_header: X-Forwarded-Proto $scheme
+{%- endfor %}
