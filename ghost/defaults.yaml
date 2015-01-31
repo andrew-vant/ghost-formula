@@ -3,7 +3,14 @@ zip: https://ghost.org/zip/ghost-0.5.8.zip
 zip_hash: c9c73d293cc6d9ce25948391c35d8ea7100639e1
 themes: salt://ghost/files/themes
 listen_address: 127.0.0.1
-starting_port: 2369
+
+# The default ghost port is 2368, and the default config files use 2369
+# for some developer stuff. By default ghost-formula starts at 2370 to
+# avoid possible future conflicts, but this is not required.
+
+starting_port: 2370
+
 # "blogs" should be a possibly-empty list of blog domains. (actually urls
 # without the leading http://)
+
 blogs: []
