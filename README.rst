@@ -11,7 +11,7 @@ multiple instances of Ghost.
 
 Each instance listens on a separate port. It is probably desirable to run nginx
 or apache in front of them. pillar.example shows one way to make this
-formula play nice with `nginx-formula <http://https://github.com/saltstack-formulas/nginx-formula>`_.
+formula play nice with `nginx-formula <https://github.com/saltstack-formulas/nginx-formula>`_.
 
 The only required pillar entry is a list of blogs. The formula won't break
 if they aren't provided, but it won't do anything either. 
