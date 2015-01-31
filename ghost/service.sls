@@ -6,7 +6,6 @@ include:
 {%- set dget = salt['defaults.get'] %}
 
 {%- for site in dget('blogs') %}
-
 ghost-service-{{ site }}:
   cmd.run:
     - name: forever-service install ghost-{{ site }} -s index.js -e "NODE_ENV=production"

@@ -1,5 +1,6 @@
 include:
   - ghost.install
+  - ghost.service
 
 {#- convenience #}
 {%- set dget = salt['defaults.get'] %}
@@ -16,4 +17,6 @@ ghost-{{ blog }}:
         blog: {{ blog }}
         listen_address: {{ dget("listen_address") }}
         port: {{ loop.index0 + dget("starting_port") }}
+    - watch_in:
+        - service: ghost-service-{{ blog }}
 {% endfor %}
