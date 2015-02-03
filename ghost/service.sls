@@ -13,6 +13,7 @@ ghost-service-{{ site }}:
     - creates: {{ servicepath.format(site) }}
     - require:
       - npm: ghost-deps
+      - cmd: ghost-install-{{ site }}
   service.running:
     - name: ghost-{{ site }}
     - enable: True

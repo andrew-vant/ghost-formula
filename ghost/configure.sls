@@ -17,6 +17,8 @@ ghost-{{ blog }}:
         blog: {{ blog }}
         listen_address: {{ dget("listen_address") }}
         port: {{ loop.index0 + dget("starting_port") }}
+    - require:
+        - archive: ghost-install-{{ blog }}
     - watch_in:
         - service: ghost-service-{{ blog }}
 {% endfor %}
