@@ -10,7 +10,7 @@ ghost:
   conf:
     default:
       server:
-        # Only do this if you are NOT using a proxy such as nginx. 
+        # Only do this if you are NOT using a local proxy such as nginx. 
         host: {{ grains['ip4_interfaces']['eth0'][0] }}
 
 # There is a default package location in defaults.yaml, but if you want to
@@ -51,6 +51,8 @@ ghost:
 # port 80. The Ghost team recommends nginx. A concise way to configure this
 # formula and the nginx formula jointly might look like the below. It is safe
 # to apply these settings alongside anything else you might have nginx doing. 
+#
+# These examples are for nginx, but the same principle works for apache.
 
 {%- load_yaml as blogs %}
 - blog1.example.com
