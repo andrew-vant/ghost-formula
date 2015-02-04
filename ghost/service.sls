@@ -1,5 +1,3 @@
-{%- from "ghost/map.jinja" import servicepath with context -%}
-
 include:
   - .install
 
@@ -10,7 +8,7 @@ ghost-service-{{ site }}:
   cmd.run:
     - name: forever-service install ghost-{{ site }} -s index.js -e "NODE_ENV=production"
     - cwd: {{ dget("root") }}/sites/{{ site }}
-    - creates: {{ servicepath.format(site) }}
+    - unless: test -e /etc/init/ghost-{{ site }}.conf -o -e /etc/init.d/ghost-{{ site }}
     - require:
       - npm: ghost-deps
       - cmd: ghost-install-{{ site }}
