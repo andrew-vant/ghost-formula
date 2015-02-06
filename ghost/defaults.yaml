@@ -5,12 +5,13 @@ themes: salt://ghost/files/themes
 listen_address: 127.0.0.1
 
 # The default ghost port is 2368, and the default config files use 2369
-# for some developer stuff. By default ghost-formula starts at 2370 to
-# avoid possible future conflicts, but this is not required.
+# for some developer stuff. Ghost-formula starts at 2370 to avoid possible
+# future conflicts, but this can be overridden in pillar.
 
 starting_port: 2370
 
-# "blogs" should be a possibly-empty list of blog domains. (actually urls
-# without the leading http://)
+# "blogs" should be overridden with a list of blog ids. This should probably be
+# the domain names, e.g. [blog1.example.com, blog2.example.com]. See 
+# pillar.example for more details.
 
 blogs: []

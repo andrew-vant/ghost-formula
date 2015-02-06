@@ -1,3 +1,4 @@
 include:
-  - ghost.configure
+  - ghost.install
   - ghost.service
+  - ghost.configure
