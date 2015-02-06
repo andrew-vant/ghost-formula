@@ -1,4 +1,4 @@
-{%- from "ghost/map.jinja" import pkgnames with context -%}
+{%- from "ghost/map.jinja" import ghost with context -%}
 
 {#- Stuffing defaults.get into something that's easier to write. #}
 {%- set dget = salt['defaults.get'] -%}
@@ -6,9 +6,9 @@
 ghost-deps:
   pkg.installed:
     - pkgs:
-      - {{ pkgnames.npm }}
-      - {{ pkgnames.node }}
-      - {{ pkgnames.unzip }}
+      - {{ ghost.npm }}
+      - {{ ghost.node }}
+      - {{ ghost.unzip }}
   npm.installed:
     - pkgs:
       - forever

@@ -1,7 +1,7 @@
-{%- set pkgnames = salt['grains.filter_by']({
+{%- set ghost = salt['grains.filter_by']({
     'Debian': {'npm': 'npm',
               'node': 'nodejs-legacy',
               'unzip': 'unzip'}
     },
-    merge=salt['pillar.get']('ghost:lookup:pkgnames'),
+    merge=salt['pillar.get']('ghost:lookup'),
     default='Debian') %}
